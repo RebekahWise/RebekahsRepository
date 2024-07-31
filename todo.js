@@ -1,56 +1,70 @@
-// Write the code necessary to do the following:
+// Function to save the current state of the to-do list to localStorage
+function saveList() {
+  const items = [];
+  document.querySelectorAll("li").forEach(li => {
+      items.push({
+          text: li.firstChild.textContent,
+          done: li.classList.contains("done")
+      });
+  });
+  localStorage.setItem("todoList", JSON.stringify(items));
+}
 
+// Function to load the to-do list from localStorage
+function loadList() {
+  const items = JSON.parse(localStorage.getItem("todoList")) || [];
+  items.forEach(item => {
+      const newLi = document.createElement("li");
+      newLi.innerText = item.text;
+      if (item.done) {
+          newLi.classList.add("done");
+      }
+      const newButton = document.createElement("button");
+      newButton.innerText = "X";
+      newButton.setAttribute("class", "remove");
+      newLi.append(newButton);
+      list.append(newLi);
+  });
+}
 
+// Add new item to to-do list
 const submit = document.querySelector(".submit");
-const list = document.querySelector("ul");
-const form = document.querySelector(".form");
-
-//add new item to to do list 
-submit.addEventListener("click", function(e){
-    e.preventDefault();
+const list = document.querySelector("ul"); // Define the 'list' variable
+if (list) {
+  submit.addEventListener("click", function(event) {
+    event.preventDefault();
     const newLi = document.createElement("li");
     const newItem = document.querySelector("#item");
-    newLi.innerText = newItem.value + " ";
-list.append(newLi);
-//add remove button
-const newButton = document.createElement("button");
-newButton.innerText = "X";
-newButton.setAttribute("class","remove")
-newLi.append(newButton);
-newItem.value = '';
-});
+    newLi.innerText = newItem.value;
+    list.append(newLi);
 
+    // Add remove button
+    const newButton = document.createElement("button");
+    newButton.innerText = "X";
+    newButton.setAttribute("class", "remove");
+    newLi.append(newButton);
+    newItem.value = '';
 
-const newLis = document.querySelectorAll("li");
-for (let newLi of newLis){
-const listItem = {item: newLi , class: newLi.classList};
-localStorage.setItem("li", JSON.stringify(listItem));}
+    // Save the updated list to localStorage
+    saveList();
+  });
 
-const buttons = document.querySelectorAll("li button");
+  // Remove item on clicking remove button
+  list.addEventListener("click", function(event) {
+    if (event.target.tagName === "BUTTON") {
+        event.target.parentElement.remove();
+        saveList();
+    }
+  });
 
-//remove item on clicking remove button
-list.addEventListener("click", function(event) {
-  if (event.target.tagName === "BUTTON") {
-    const value = event.target.parentElement.value
-    event.target.parentElement.remove();
-    localStorage.removeItem("li", value);
-  }
-});
+  // Cross item off list on click
+  list.addEventListener("click", function(event) {
+    if (event.target.tagName === "LI") {
+        event.target.classList.toggle("done");
+        saveList();
+    }
+  });
 
-//cross item off list on click
-list.addEventListener("click", function(event) {
-  if (event.target.tagName === "LI") {
-    event.target.classList.toggle("done");
-  }
-});
-
-
-
-
-
-// document.querySelectorAll("li");
-// for (let itemDetails of listItem){
-//     const itemClass = itemDetails.className;
-//     const li = [itemDetails.value, itemClass];
-// localStorage.setItem("li", JSON.stringify(li));}
-
+  // Load the to-do list from localStorage when the page loads
+  document.addEventListener("DOMContentLoaded", loadList);
+}
