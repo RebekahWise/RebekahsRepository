@@ -4,6 +4,8 @@ li button {
     background-color: #a01c1c78;
     border: none;
     font-size: 1rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
   }
   li {
     font-size: 2rem;
