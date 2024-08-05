@@ -19,7 +19,7 @@ function loadList() {
       if (item.done) {
           newLi.classList.add("done");
       }
-      const newButton = document.createElement("button");
+      const newButton = document.createElement("button");//add remove button back in
       newButton.innerText = "X";
       newButton.setAttribute("class", "remove");
       newLi.append(newButton);
